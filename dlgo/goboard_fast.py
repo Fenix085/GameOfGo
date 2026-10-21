@@ -1,6 +1,6 @@
 import copy
 from dlgo.gotypes import Player, Point
-from dlgo.scoring import compuet_game_result
+from dlgo.scoring import compute_game_results
 from dlgo import zobrist
 from dlgo.utils import MoveAge
 
@@ -34,9 +34,9 @@ def init_corner_table(dim):
         for c in range(1, cols + 1):
             p = Point(row=r, col=c)
             full_corners = [
-                Point(row=p.row - 1, col=p.col - 1)
-                Point(row=p.row - 1, col=p.col + 1)
-                Point(row=p.row + 1, col=p.col - 1)
+                Point(row=p.row - 1, col=p.col - 1),
+                Point(row=p.row - 1, col=p.col + 1),
+                Point(row=p.row + 1, col=p.col - 1),
                 Point(row=p.row + 1, col=p.col + 1)
             ]
             true_corners = [
@@ -141,8 +141,6 @@ class Board():
             new_string = new_string.merged_with(same_colour_string)
         for new_string_point in new_string.stones:
             self._grid[new_string_point] = new_string
-        # Remove empty-point hash code.
-        self._hash ^= zobrist.HASH_CODE[point, None]
         # Add filled point hash code.
         self._hash ^= zobrist.HASH_CODE[point, player]
 # end::apply_zobrist[]
@@ -175,8 +173,6 @@ class Board():
             self._grid[point] = None
             # Remove filled point hash code.
             self._hash ^= zobrist.HASH_CODE[point, string.colour]
-            # Add empty point hash code.
-            self._hash ^= zobrist.HASH_CODE[point, None]
 
     def is_self_capture(self, player, point):
         friendly_strings = []
@@ -242,7 +238,7 @@ class Board():
         return isinstance(other, Board) and \
             self.num_rows == other.num_rows and \
             self.num_cols == other.num_cols and \
-            self._hash() == other._hash()
+            self._hash == other._hash
     
     def __deepcopy__(self, memdict={}):
         copied = Board(self.num_rows, self.num_cols)
@@ -250,6 +246,7 @@ class Board():
         # (immutable) to GoStrings (also immutable)
         copied._grid = copy.copy(self._grid)
         copied._hash = self._hash
+        copied.move_ages = copy.deepcopy(self.move_ages)
         return copied
     
 # tag::return_zobrist[]
@@ -287,6 +284,7 @@ class Move():
             return 'pass'
         if self.is_resign:
             return 'resign'
+        assert self.point is not None
         return '(r %d, c %d)' % (self.point.row, self.point.col)
     
     def __hash__(self) -> int:
@@ -321,7 +319,7 @@ class GameState():
                 previous.previous_states |
                 {(previous.next_player, previous.board.zobrist_hash())}
             )
-            self.last_move = move
+        self.last_move = move
 
     def apply_move(self, move):
         """Return the new GameState after applying the move."""
@@ -397,5 +395,5 @@ class GameState():
             return None
         if self.last_move.is_resign:
             return self.next_player
-        game_result = compute_game_result(self)
+        game_result = compute_game_results(self)
         return game_result.winner

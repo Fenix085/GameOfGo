@@ -1,3 +1,6 @@
 Part 1: Encoders
 created abstract encoder class with possibility to reference different encoders by their name
 create OnePlaneEncoder, it uses 1 matrix (plane) of the saem size as the board
+
+
+__all__ = [] declares which names should be included in from _ import *

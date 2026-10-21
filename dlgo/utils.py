@@ -1,4 +1,6 @@
 #tag::print_utils[]
+from typing import Dict, Optional
+
 from dlgo import gotypes
 
 COLS = 'ABCDEFGHJKLMNOPQRST'
@@ -31,4 +33,29 @@ def point_from_coords(coords):
     col = COLS.index(coords[0]) + 1
     row = int(coords[1:])
     return gotypes.Point(row=row, col=col)
+
+def coords_from_point(point):
+    return '%s%d' % (
+        COLS[point.col - 1],
+        point.row
+    )
 # end::print_utils[]
+
+class MoveAge:
+    def __init__(self, board):
+        self.ages: Dict[gotypes.Point, Optional[int]] = {
+            gotypes.Point(row=row, col=col): None
+            for row in range(1, board.num_rows + 1)
+            for col in range(1, board.num_cols + 1)
+        }
+
+    def increment_all(self):
+        for point, age in self.ages.items():
+            if age is not None:
+                self.ages[point] = age + 1
+
+    def add(self, point):
+        self.ages[point] = 0
+
+    def reset_age(self, point):
+        self.ages[point] = None
