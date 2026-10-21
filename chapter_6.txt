@@ -4,3 +4,6 @@ create OnePlaneEncoder, it uses 1 matrix (plane) of the saem size as the board
 
 
 __all__ = [] declares which names should be included in from _ import *
+
+Part 2
+ArgumentParser()

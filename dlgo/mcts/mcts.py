@@ -87,7 +87,7 @@ class MCTSAgent(agent.Agent):
         self.temperature = temperature
 
 #tag::mcts-signature[]
-    def select_signature(self, game_state):
+    def select_move(self, game_state):
         root = MCTSNode(game_state)
 #end::mcts-signature[]
 
@@ -125,6 +125,8 @@ class MCTSAgent(agent.Agent):
                 best_pct = child_pct
                 best_move = child.move
         print('Select move %s with win pct %.3f' % (best_move, best_pct))
+        if best_move is None:
+            raise RuntimeError("MCTS did not evaluate any move")
         return best_move
 #end::mcts-selection[]
 

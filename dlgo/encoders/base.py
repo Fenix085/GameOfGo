@@ -1,5 +1,10 @@
 import importlib
 
+__all__ = [
+    'Encoder',
+    'get_encoder_by_name',
+]
+
 # tag::base_encoder[]
 class Encoder:
     def name(self): # lets support logging or saving the name of encoder model is using
@@ -26,7 +31,7 @@ class Encoder:
 def get_encoder_by_name(name, board_size): # create encoder instances by referencing their name
     if isinstance(board_size, int):
         board_size = (board_size, board_size) # if board size is only 1 intiger, create a square board from it
-    module = importlib.import_module('dlgo.encoders' + name)
+    module = importlib.import_module('dlgo.encoders.' + name)
     constructor = getattr(module, 'create') # each encoder implementation will have to provide a “create” function that provides an instance
     return constructor
 # end::encoder_by_name[]

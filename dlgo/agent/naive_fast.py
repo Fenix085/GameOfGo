@@ -23,7 +23,7 @@ class FastRandomBot(Agent):
 
     def select_move(self, game_state):
         """Choose a random move that preserves our eyes"""
-        dim = (game_state.board.run_rows, game_state.board.run_cols)
+        dim = (game_state.board.num_rows, game_state.board.num_cols)
         if dim != self.dim:
             self._update_cache(dim)
 
