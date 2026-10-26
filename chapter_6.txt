@@ -8,3 +8,17 @@ __all__ = [] declares which names should be included in from _ import *
 Part 2
 ArgumentParser()
 ran training for a bit, takes too long on my laptop
+
+
+Keras + TensorFlow
+trained neural network, that showed 8% accuracy against 1.2% for random
+layers used:
+ - Dense
+ - Convolutional
+ - Dropout
+ - Flatten
+ - Max/Average Polling
+
+softmax, relu, sigmoid activations
+
+mean squared error and categorical cross-entropy loss functions
